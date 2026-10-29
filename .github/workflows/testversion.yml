@@ -93,6 +93,7 @@ jobs:
           for f in $(unzip -l $APK | awk '{print $4}' | grep -i 'locale.*xml'); do $AAPT dump xmltree --file $f $APK; done
           $AAPT dump xmltree --file AndroidManifest.xml $APK | grep -i locale || true
 
+      - name: Prepare file
         id: file
         run: |
           name="SinceUs-Test-${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD)"
