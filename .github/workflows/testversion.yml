@@ -92,6 +92,9 @@ jobs:
           unzip -l $APK | grep -i locale || true
           for f in $(unzip -l $APK | awk '{print $4}' | grep -i 'locale.*xml'); do $AAPT dump xmltree --file $f $APK; done
           $AAPT dump xmltree --file AndroidManifest.xml $APK | grep -i locale || true
+          f=$($AAPT dump resources $APK | grep -A3 "0x7f120000" | grep -o '(file) [^ ]*' | head -1 | cut -d' ' -f2)
+          echo "locale config file: $f"
+          $AAPT dump xmltree --file "$f" $APK
 
       - name: Prepare file
         id: file
