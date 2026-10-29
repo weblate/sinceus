@@ -11,6 +11,11 @@ val releaseKeystore = rootProject.file("keystore.properties").takeIf { it.exists
     Properties().apply { file.inputStream().use { load(it) } }
 }
 
+// Sprachen, die in die App kommen. Übersetzungen aus Weblate liegen schon vorher im Repo,
+// eine neue Sprache wird hier erst eingetragen, wenn sie fast vollständig ist.
+// Die Sprachauswahl in der App und in den Android-Einstellungen richtet sich nach dieser Liste.
+val appLanguages = listOf("de", "en")
+
 android {
     namespace = "app.sinceus"
     compileSdk = 36
@@ -24,6 +29,7 @@ android {
         // Repository, in dem die GitHub-Version nach neuen Releases sucht
         val githubRepo = providers.gradleProperty("githubRepo").getOrElse("DerDieDasLian/sinceus")
         buildConfigField("String", "GITHUB_REPO", "\"$githubRepo\"")
+        buildConfigField("String", "APP_LANGUAGES", "\"${appLanguages.joinToString(",")}\"")
     }
 
     // play:   Google Play, Updates über den Play Store
@@ -92,12 +98,10 @@ android {
         buildConfig = true
     }
 
-    // Sprachauswahl pro App in den Android-Einstellungen.
-    // Nur diese Sprachen kommen in die App. Übersetzungen aus Weblate liegen schon vorher im Repo,
-    // eine neue Sprache wird hier erst eingetragen, wenn sie fast vollständig ist.
+    // Sprachauswahl pro App in den Android-Einstellungen, nur mit den Sprachen aus appLanguages
     androidResources {
         generateLocaleConfig = true
-        localeFilters += listOf("en", "de")
+        localeFilters += appLanguages
     }
 
     testOptions {
