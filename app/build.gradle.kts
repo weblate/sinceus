@@ -92,9 +92,12 @@ android {
         buildConfig = true
     }
 
-    // Sprachauswahl pro App in den Android-Einstellungen (Englisch, Deutsch)
+    // Sprachauswahl pro App in den Android-Einstellungen.
+    // Nur diese Sprachen kommen in die App. Übersetzungen aus Weblate liegen schon vorher im Repo,
+    // eine neue Sprache wird hier erst eingetragen, wenn sie fast vollständig ist.
     androidResources {
         generateLocaleConfig = true
+        localeFilters += listOf("en", "de")
     }
 
     testOptions {

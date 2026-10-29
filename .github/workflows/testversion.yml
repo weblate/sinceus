@@ -84,7 +84,15 @@ jobs:
       - name: Build
         run: ./gradlew assembleGithubBeta
 
-      - name: Prepare file
+      - name: Probe locales
+        run: |
+          AAPT=$(ls -d $ANDROID_HOME/build-tools/*/ | sort -V | tail -1)aapt2
+          APK=app/build/outputs/apk/github/beta/app-github-beta.apk
+          $AAPT dump configurations $APK | sort -u
+          unzip -l $APK | grep -i locale || true
+          for f in $(unzip -l $APK | awk '{print $4}' | grep -i 'locale.*xml'); do $AAPT dump xmltree --file $f $APK; done
+          $AAPT dump xmltree --file AndroidManifest.xml $APK | grep -i locale || true
+
         id: file
         run: |
           name="SinceUs-Test-${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD)"
